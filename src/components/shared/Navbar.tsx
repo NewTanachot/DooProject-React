@@ -12,7 +12,7 @@ const Navbar = () => {
       <div>
         <ul className="menu menu-horizontal">
           <li className="px-4">
-            <Link to="/stock">สินค้า</Link>
+            <Link to="/">สินค้า</Link>
           </li>
           <li className="px-4">
             <Link to="/log">รายการ</Link>

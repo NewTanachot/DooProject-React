@@ -1,10 +1,9 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, useContext } from "react";
+import { ActionContext } from "../context/action";
 
-interface Props {
-  onLogin: (email: string, password: string) => void;
-}
+const Login: FC = () => {
+  const { handleLogin } = useContext(ActionContext);
 
-const Login: FC<Props> = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,36 +15,17 @@ const Login: FC<Props> = (props) => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const clearForm = () => {
+    setEmail("");
+    setPassword("");
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    props.onLogin(email, password);
-    
-    const BodyData = {
-      email: email,
-      password: password
-    }
-    
-    const Response = await fetch("https://localhost:7260/api/Auth/Login", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(BodyData),
-    });
 
-    const Data = await Response.json();
-    
-    // Save UserId and another credential to Localstorage
-    // console.log(Data);
-    localStorage.setItem("JWT", JSON.stringify(Data));
+    // handleLogin(email, password);
 
-    var a = localStorage.getItem("JWT");
-
-    if (a != null){
-      var obj = JSON.parse(a);
-    }
-
-    console.log(obj);
+    clearForm();
   };
 
   return (
