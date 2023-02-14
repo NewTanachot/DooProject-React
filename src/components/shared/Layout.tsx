@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 const Layout: FC = () => {
   return (
     <>
-      <div className="min-h-screen min-w-screen">
+      <div className="h-screen w-screen">
         <Navbar />
         <Outlet />
       </div>

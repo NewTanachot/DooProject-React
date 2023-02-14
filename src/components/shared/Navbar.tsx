@@ -1,21 +1,25 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <div className="navbar bg-base-100 flex justify-between items-center border-b-2">
+    <div className="navbar bg-base-100 fw-full flex justify-between items-center bg-white sm:px-8  px-4 py-4 border-b border-b-[#e6ebf4]">
       <div>
-        <a className="text-xl">Logo</a>
+        <Link to="/" className="text-xl">
+          Logo
+        </Link>
       </div>
       <div>
         <ul className="menu menu-horizontal">
           <li className="px-4">
-            <a>สินค้า</a>
+            <Link to="/stock">สินค้า</Link>
           </li>
-          <li>
-            <a>รายการ</a>
+          <li className="px-4">
+            <Link to="/log">รายการ</Link>
           </li>
         </ul>
       </div>
+      <div></div>
     </div>
   );
 };

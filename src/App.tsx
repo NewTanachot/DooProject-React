@@ -1,5 +1,5 @@
 import React from "react";
-import LoginPage from "./pages/Login";
+import { Login, Stock, HistoryLog } from "./pages";
 import { Fragment } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -16,7 +16,9 @@ const App: React.FC = () => {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route index element={<LoginPage onLogin={handleLogin} />} />
+            <Route index element={<Login onLogin={handleLogin} />} />
+            <Route path="/stock" element={<Stock />} />
+            <Route path="/log" element={<HistoryLog />} />
           </Route>
         </Routes>
       </BrowserRouter>
