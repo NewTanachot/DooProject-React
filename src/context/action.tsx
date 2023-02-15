@@ -84,11 +84,19 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
 
   // use in useEffect
   const checkIfIsLogin = (): void => {
-    const user = JSON.parse(localStorage.getItem("JWT") || "");
-    if (user.userName != null) {
-      setIsLogin(true);
-      setCurrentUser(user.userName);
-    } else {
+
+    const localItem = localStorage.getItem("JWT");
+    
+    if (localItem != null){
+      const user = JSON.parse(localItem);
+      if (user.userName != null) {
+        setIsLogin(true);
+        setCurrentUser(user.userName);
+      } else {
+        setIsLogin(false);
+      }
+    }
+    else{
       setIsLogin(false);
     }
   };
@@ -96,7 +104,8 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
   const handleRegister = async (user: newUser) => {
     try {
       // fetch response to server
-      const response = await fetch("https://localhost:7260/api/Auth/Register", {
+      // const response = await fetch("https://localhost:7260/api/Auth/Register", {
+      const response = await fetch("http://localhost:81/api/Auth/Register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +129,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     };
 
     try {
-      const response = await fetch("https://localhost:7260/api/Auth/Login", {
+      const response = await fetch("http://localhost:81/api/Auth/Login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +162,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
   const getAllProduct = async () => {
     try {
       const response = await fetch(
-        "https://localhost:7260/api/Product/GetProduct",
+        "http://localhost:81/api/Product/GetProduct",
         {
           method: "GET",
           headers: {
@@ -196,13 +205,17 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     }
 
     // Make a PUT request to update the product on the server
+    var Token:any = localStorage.getItem("JWT");
+    var objToken = JSON.parse(Token);
+
     try {
       const response = await fetch(
-        "https://localhost:7260/api/Transection/Addsection",
+        "http://localhost:81/api/Transection/Addsection",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": "Bearer " + objToken.accessToken
           },
           body: JSON.stringify(BodyData),
         }
@@ -239,7 +252,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     // Make a PUT request to update the product on the server
     try {
       const response = await fetch(
-        "https://localhost:7260/api/Transection/Addsection",
+        "http://localhost:81/api/Transection/Addsection",
         {
           method: "PUT",
           headers: {
@@ -279,7 +292,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     // fetch newProduct to server
     try {
       const response = await fetch(
-        "https://localhost:7260/api/Transection/Addsection",
+        "http://localhost:81/api/Transection/Addsection",
         {
           method: "POST",
           headers: {

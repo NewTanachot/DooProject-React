@@ -25,13 +25,13 @@ const Login: FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // handleLogin(email, password);
+    handleLogin(email, password);
 
     clearForm();
   };
 
   useEffect(() => {
-    const checkData = email.length > 0 && password.length > 0;
+    const checkData = true;
     setFormValid(checkData);
   }, []);
 
