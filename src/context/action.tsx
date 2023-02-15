@@ -3,6 +3,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import {
   ActionContextInterface,
   ActionProviderInterface,
+  newUser,
   ProductInterface,
 } from "../types/context/Action.context";
 
@@ -47,18 +48,28 @@ const sampleProduct: ProductInterface[] = [
 
 const defaultValue: ActionContextInterface = {
   isLogin: false,
+  handleRegister: async (user: newUser) => {},
   handleLogin: async (email: string, password: string) => {},
   allProduct: sampleProduct,
   getAllProduct: async () => {},
+  currentIndex: null,
+  handleCurrentIndex: (index: number) => {},
+  addAmount: async (amount: number) => {},
+  reduceAmount: async (amount: number) => {},
+  handleIsAdjust: () => {},
+  isAdjust: false,
 };
 
 export const ActionContext =
   createContext<ActionContextInterface>(defaultValue);
 
 export const ActionProvider = ({ children }: ActionProviderInterface) => {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
   const [allProduct, setAllProduct] =
     useState<ProductInterface[]>(sampleProduct);
+
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [isAdjust, setIsAdjust] = useState<boolean>(false);
 
   // use in useEffect
   const checkIfIsLogin = (): void => {
@@ -66,6 +77,16 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
       setIsLogin(true);
     } else {
       setIsLogin(false);
+    }
+  };
+
+  const handleRegister = async (user: newUser) => {
+    // delete this line before connect to server
+    localStorage.setItem("JWT", JSON.stringify(user));
+    try {
+      // fetch response to server
+    } catch (error) {
+      alert(error);
     }
   };
 
@@ -118,9 +139,73 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     }
   };
 
+  const handleCurrentIndex = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  const addAmount = async (amount: number) => {
+    // Make a copy of the current product object
+    const updatedProduct = allProduct;
+
+    // Update the productAmount property
+    updatedProduct[currentIndex || 0].productAmount += Number(amount);
+
+    setAllProduct(updatedProduct);
+
+    // Make a PUT request to update the product on the server
+    try {
+    } catch (error) {
+    } finally {
+      setIsAdjust(false);
+    }
+  };
+
+  const reduceAmount = async (amount: number) => {
+    // Make a copy of the current product object
+    const updatedProduct = allProduct;
+
+    // Update the productAmount property
+    updatedProduct[currentIndex || 0].productAmount -= Number(amount);
+
+    setAllProduct(updatedProduct);
+
+    // Make a PUT request to update the product on the server
+    try {
+    } catch (error) {
+    } finally {
+      setIsAdjust(false);
+    }
+  };
+
+  const handleIsAdjust = () => {
+    setIsAdjust(!isAdjust);
+  };
+
+  const addNewProduct = (newProduct: ProductInterface) => {
+    // change newProduct type to newProductInterface
+    // delete after connected to server
+    setAllProduct([...allProduct, newProduct]);
+
+    // fetch newProduct to server
+    try {
+    } catch (error) {}
+  };
+
   return (
     <ActionContext.Provider
-      value={{ isLogin, handleLogin, allProduct, getAllProduct }}
+      value={{
+        isLogin,
+        handleRegister,
+        handleLogin,
+        allProduct,
+        getAllProduct,
+        currentIndex,
+        handleCurrentIndex,
+        addAmount,
+        reduceAmount,
+        handleIsAdjust,
+        isAdjust,
+      }}
     >
       {children}
     </ActionContext.Provider>

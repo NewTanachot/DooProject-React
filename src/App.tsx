@@ -1,5 +1,5 @@
 import React from "react";
-import { Stock, HistoryLog } from "./pages";
+import { Stock, HistoryLog, Register } from "./pages";
 import { Fragment } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -12,6 +12,7 @@ const App: React.FC = () => {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Stock />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/log" element={<HistoryLog />} />
           </Route>
         </Routes>

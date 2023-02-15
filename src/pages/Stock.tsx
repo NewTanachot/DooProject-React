@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { RenderStock, Loader, Login } from "../components";
+import { RenderStock, Loader, Login, NewProductModal } from "../components";
 import { ActionContext } from "../context/action";
 
 const Stock = () => {
@@ -7,20 +7,34 @@ const Stock = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
-    // getAllProduct();
-    setLoading(false);
+    const fetchAllProduct = () => {
+      setLoading(true);
+      // getAllProduct();
+      setLoading(false);
+    };
   }, []);
   return (
     <>
-      {!isLogin ? (
+      {isLogin ? (
         <div>
           {loading ? (
             <div className="flex justify-center items-center">
               <Loader />
             </div>
           ) : (
-            <RenderStock />
+            <section>
+              <div className="flex justify-center items-center">
+                <h2 className="font-bold text-4xl">สินค้าที่มีอยู่</h2>
+                <label
+                  htmlFor="newProduct-modal"
+                  className="btn my-4 mx-8 px-8"
+                >
+                  เพิ่มใหม่
+                </label>
+              </div>
+              <NewProductModal />
+              <RenderStock />
+            </section>
           )}
         </div>
       ) : (

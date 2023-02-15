@@ -1,5 +1,6 @@
 import React, { useState, FC, useContext } from "react";
 import { ActionContext } from "../context/action";
+import { Link } from "react-router-dom";
 
 const Login: FC = () => {
   const { handleLogin } = useContext(ActionContext);
@@ -29,7 +30,7 @@ const Login: FC = () => {
   };
 
   return (
-    <div className="flex w-screen justify-center items-center">
+    <div className="flex flex-col w-screen justify-center items-center">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-start items-center w-96 md:w-1/3 bg-white p-4 mt-8 rounded-lg shadow-md"
@@ -65,6 +66,12 @@ const Login: FC = () => {
           Login
         </button>
       </form>
+      <section className="flex justify-center items-center">
+        <p className="font-semibold">ยังไม่ได้ลงทะเบียน </p>
+        <Link className="btn btn-link" to="/register">
+          Signup
+        </Link>
+      </section>
     </div>
   );
 };
