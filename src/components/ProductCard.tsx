@@ -26,7 +26,7 @@ const ProductCard: FC<Props> = (props) => {
           {allProduct[productIndex].productName}
         </h2>
         <h2 className="font-semibold text-lg text-end mt-4">
-          {allProduct[productIndex].productAmount}
+          {allProduct[productIndex].productQuantity}
         </h2>
       </div>
     </div>

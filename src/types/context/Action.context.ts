@@ -1,9 +1,12 @@
 export interface ActionContextInterface {
   isLogin: boolean;
   handleRegister: (user: newUser) => {};
+  currentUser: string;
   handleLogin: (email: string, password: string) => {};
+  handleLogout: () => void;
   allProduct: ProductInterface[];
   getAllProduct: () => {};
+  addNewProduct: (newProduct: newProductInterface) => {};
   currentIndex: number | null;
   handleCurrentIndex: (index: number) => void;
   addAmount: (amount: number) => {};
@@ -20,7 +23,7 @@ export interface ProductInterface {
   productId: string;
   productName: string;
   productDescription: string;
-  productAmount: number;
+  productQuantity: number;
   mfd: string;
   exd: string;
   productAddDate: string;

@@ -93,7 +93,7 @@ const AdjustModal: FC<Props> = (prop) => {
                 Enter {addOrReduce} value
               </label>
               <input
-                placeholder="Amount (baht):"
+                placeholder="0"
                 name="amount"
                 type="number"
                 step={1}

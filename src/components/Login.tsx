@@ -1,4 +1,4 @@
-import React, { useState, FC, useContext } from "react";
+import React, { useState, FC, useContext, useEffect } from "react";
 import { ActionContext } from "../context/action";
 import { Link } from "react-router-dom";
 
@@ -7,6 +7,7 @@ const Login: FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [formValid, setFormValid] = useState(false);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -28,6 +29,11 @@ const Login: FC = () => {
 
     clearForm();
   };
+
+  useEffect(() => {
+    const checkData = email.length > 0 && password.length > 0;
+    setFormValid(checkData);
+  }, []);
 
   return (
     <div className="flex flex-col w-screen justify-center items-center">
@@ -62,6 +68,7 @@ const Login: FC = () => {
         <button
           type="submit"
           className="bg-indigo-500 text-white font-bold py-2 px-4 rounded hover:bg-indigo-600"
+          disabled={!formValid}
         >
           Login
         </button>
