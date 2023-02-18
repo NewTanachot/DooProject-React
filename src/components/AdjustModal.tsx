@@ -1,37 +1,39 @@
-import React, { useState, useContext, FC } from "react";
+import React, { useState, useContext, FC, useEffect } from "react";
 import { ActionContext } from "../context/action";
+import { editQuantity } from "../types/context/Action.context";
 
-interface Props {
-  onClose: () => void;
-}
+const updateTypes = ["add", "reduce"];
 
-const AdjustModal: FC<Props> = (prop) => {
-  const {
-    currentIndex,
-    allProduct,
-    addAmount,
-    reduceAmount,
-    isAdjust,
-    handleIsAdjust,
-  } = useContext(ActionContext);
+const AdjustModal: FC = () => {
+  const { currentIndex, allProduct, isAdjust, handleIsAdjust, updateQuantity } =
+    useContext(ActionContext);
   const [amount, setAmount] = useState<number>(0);
-  const [addOrReduce, setAddOrReduce] = useState<string | null>(null);
+  const [updateType, setUpdateType] = useState<string>("add");
+
+  const [formValid, setFormValid] = useState<boolean>(false);
 
   const inputAmount = (event: any): void => {
-    setAmount(event.target.value);
+    if (updateType === "add") {
+      setAmount(event.target.value);
+    } else {
+      setAmount(event.target.value);
+    }
   };
 
   const handleSubmit = (): void => {
-    if (addOrReduce === "add") {
-      addAmount(amount);
-    } else {
-      reduceAmount(amount);
-    }
+    const updateData: editQuantity = {
+      productId: allProduct[currentIndex].productId,
+      quantity: amount,
+      transectionType: updateType,
+    };
+
+    updateQuantity(updateData);
+
     closeModalHandler();
   };
 
   const clearInput = (): void => {
-    setAddOrReduce(null);
+    setUpdateType("add");
     setAmount(0);
   };
 
@@ -39,12 +41,19 @@ const AdjustModal: FC<Props> = (prop) => {
     let element = document.getElementById("adjust-modal") as HTMLInputElement;
     element.checked = false;
     clearInput();
-    prop.onClose();
   };
 
   const checkFormValid = () => {
-    // value > 0 && if reduce then value <= produceAmount
+    if (updateType === "add") {
+      return amount > 0;
+    } else {
+      return amount < 0 && amount <= allProduct[currentIndex].productQuantity;
+    }
   };
+
+  useEffect(() => {
+    setFormValid(checkFormValid());
+  }, [amount, updateType]);
 
   return (
     <>
@@ -52,27 +61,25 @@ const AdjustModal: FC<Props> = (prop) => {
       <div className="modal" id="adjust-modal">
         <div className="modal-box">
           <h3 className="font-bold text-2xl">
-            {allProduct[currentIndex || 0].productName}
+            {allProduct[0] && allProduct[currentIndex].productName}
           </h3>
           <div className="flex justify-between items-center mt-4">
             <section>
               <button
-                className={`btn border-0 px-10 mx-4 ${
-                  addOrReduce === "add" && "bg-white text-black"
-                }`}
+                className={`btn border-0 px-10 mx-4 `}
                 onClick={() => {
-                  setAddOrReduce("add");
+                  setUpdateType(updateTypes[0]);
                 }}
-                disabled={addOrReduce === "add"}
+                disabled={updateType === "add"}
               >
                 เพิ่ม
               </button>
               <button
-                className={`btn border-0 px-10 mx-4`}
+                className={`btn border-0 px-10 mx-4 `}
                 onClick={() => {
-                  setAddOrReduce("reduce");
+                  setUpdateType(updateTypes[1]);
                 }}
-                disabled={addOrReduce === "reduce"}
+                disabled={updateType === "reduce"}
               >
                 ลด
               </button>
@@ -87,40 +94,39 @@ const AdjustModal: FC<Props> = (prop) => {
             </label>
           </div>
 
-          {addOrReduce && (
-            <form className="flex flex-col justify-start items-center border-t-2 mt-8 p-4">
-              <label className="font-bold text-2xl text-center">
-                Enter {addOrReduce} value
-              </label>
-              <input
-                placeholder="0"
-                name="amount"
-                type="number"
-                step={1}
-                onChange={inputAmount}
-                value={amount}
-                className="input input-bordered w-full my-4"
-              />
+          <form className="flex flex-col justify-start items-center border-t-2 mt-8 p-4">
+            <label className="font-bold text-2xl text-center">
+              Enter {updateType} value
+            </label>
+            <input
+              placeholder="0"
+              name="amount"
+              type="number"
+              step={1}
+              onChange={inputAmount}
+              value={amount}
+              className="input input-bordered w-full my-4"
+            />
 
-              <div className="flex flex-row mt-10 justify-between items-center">
-                <button
-                  type="button"
-                  className="btn btn-primary mx-8"
-                  onClick={closeModalHandler}
-                >
-                  cancel
-                </button>
+            <div className="flex flex-row mt-10 justify-between items-center">
+              <button
+                type="button"
+                className="btn btn-primary mx-8"
+                onClick={closeModalHandler}
+              >
+                cancel
+              </button>
 
-                <button
-                  type="button"
-                  className="btn btn-primary mx-8"
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          )}
+              <button
+                type="button"
+                className="btn btn-primary mx-8"
+                onClick={handleSubmit}
+                disabled={!formValid}
+              >
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </>

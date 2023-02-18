@@ -2,16 +2,20 @@ export interface ActionContextInterface {
   isLogin: boolean;
   handleRegister: (user: newUser) => {};
   currentUser: string;
+
   handleLogin: (email: string, password: string) => {};
   handleLogout: () => void;
+  checkIfIsLogin: () => void;
+
   allProduct: ProductInterface[];
   getAllProduct: () => {};
   addNewProduct: (newProduct: newProductInterface) => {};
-  currentIndex: number | null;
+
+  currentIndex: number;
   handleCurrentIndex: (index: number) => void;
-  addAmount: (amount: number) => {};
-  reduceAmount: (amount: number) => {};
+
   handleIsAdjust: () => void;
+  updateQuantity: (updateData: editQuantity) => {};
   isAdjust: boolean;
 }
 
@@ -42,4 +46,10 @@ export interface newUser {
   password: string;
   firstName: string;
   lastName: string;
+}
+
+export interface editQuantity {
+  productId: string;
+  quantity: number;
+  transectionType: string;
 }

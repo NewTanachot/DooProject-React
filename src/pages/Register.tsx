@@ -66,7 +66,7 @@ const Register = () => {
       >
         <section className="w-full lg:flex">
           <div className="w-full mb-4 lg:mr-2">
-            <label htmlFor="email" className="block font-bold mb-2">
+            <label htmlFor="first name" className="block font-bold mb-2">
               ชื่อ:
             </label>
             <input
@@ -78,7 +78,7 @@ const Register = () => {
             />
           </div>
           <div className="w-full mb-4 lg:ml-2">
-            <label htmlFor="email" className="block font-bold mb-2">
+            <label htmlFor="last name" className="block font-bold mb-2">
               นามสกุล:
             </label>
             <input

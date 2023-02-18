@@ -8,46 +8,8 @@ import {
   newProductInterface,
   newUser,
   ProductInterface,
+  editQuantity,
 } from "../types/context/Action.context";
-
-const sampleProduct: ProductInterface[] = [
-  {
-    productId: "1",
-    productName: "Item1",
-    productDescription: "Must have!",
-    productQuantity: 10,
-    mfd: "2023-02-11T16:16:27.643",
-    exd: "2023-02-11T16:16:27.643",
-    productAddDate: "2023-02-11T23:16:36.9396944",
-  },
-  {
-    productId: "2",
-    productName: "Item2",
-    productDescription: "Must have!",
-    productQuantity: 20,
-    mfd: "2023-02-11T16:16:27.643",
-    exd: "2023-02-11T16:16:27.643",
-    productAddDate: "2023-02-11T23:16:36.9396944",
-  },
-  {
-    productId: "3",
-    productName: "Item3",
-    productDescription: "Must have!",
-    productQuantity: 30,
-    mfd: "2023-02-11T16:16:27.643",
-    exd: "2023-02-11T16:16:27.643",
-    productAddDate: "2023-02-11T23:16:36.9396944",
-  },
-  {
-    productId: "4",
-    productName: "Item4",
-    productDescription: "Must have!",
-    productQuantity: 40,
-    mfd: "2023-02-11T16:16:27.643",
-    exd: "2023-02-11T16:16:27.643",
-    productAddDate: "2023-02-11T23:16:36.9396944",
-  },
-];
 
 const defaultValue: ActionContextInterface = {
   isLogin: false,
@@ -55,28 +17,30 @@ const defaultValue: ActionContextInterface = {
   currentUser: "",
   handleLogin: async (email: string, password: string) => {},
   handleLogout: () => {},
-  allProduct: sampleProduct,
+  checkIfIsLogin: () => {},
+  allProduct: [],
   getAllProduct: async () => {},
   addNewProduct: async (newProduct: newProductInterface) => {},
-  currentIndex: null,
+  currentIndex: 0,
   handleCurrentIndex: (index: number) => {},
-  addAmount: async (amount: number) => {},
-  reduceAmount: async (amount: number) => {},
   handleIsAdjust: () => {},
+  updateQuantity: async (updateData: editQuantity) => {},
   isAdjust: false,
 };
 
 export const ActionContext =
   createContext<ActionContextInterface>(defaultValue);
 
+const transectionTypes = ["add manual", "reduce manual", "adjust"];
+
 export const ActionProvider = ({ children }: ActionProviderInterface) => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<string>("User");
 
-  const [allProduct, setAllProduct] =
-    useState<ProductInterface[]>(sampleProduct);
+  const [allProduct, setAllProduct] = useState<ProductInterface[]>([]);
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
-  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isAdjust, setIsAdjust] = useState<boolean>(false);
 
   // navigation
@@ -84,28 +48,23 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
 
   // use in useEffect
   const checkIfIsLogin = (): void => {
-
     const localItem = localStorage.getItem("JWT");
-    
-    if (localItem != null){
+    if (localItem) {
       const user = JSON.parse(localItem);
       if (user.userName != null) {
         setIsLogin(true);
         setCurrentUser(user.userName);
-      } else {
-        setIsLogin(false);
+        return;
       }
     }
-    else{
-      setIsLogin(false);
-    }
+
+    setIsLogin(false);
   };
 
   const handleRegister = async (user: newUser) => {
     try {
-      // fetch response to server
-      // const response = await fetch("https://localhost:7260/api/Auth/Register", {
-      const response = await fetch("http://localhost:81/api/Auth/Register", {
+      // fetch to server
+      const response = await fetch("http://localhost:5000/api/Auth/Register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +88,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     };
 
     try {
-      const response = await fetch("http://localhost:81/api/Auth/Login", {
+      const response = await fetch("http://localhost:5000/api/Auth/Login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -159,14 +118,28 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     setCurrentUser("");
   };
 
+  const checkExpire = (exp: string): boolean => {
+    const currentDate = new Date();
+    const formatExp = new Date(exp);
+
+    return currentDate <= formatExp;
+  };
+
   const getAllProduct = async () => {
+    // setLoading(true);
+    let token: any = JSON.parse(localStorage.getItem("JWT") || "");
+
+    !checkExpire(token.accessToken_ExpireAt) && handleLogout();
+
     try {
+      // return;
       const response = await fetch(
-        "http://localhost:81/api/Product/GetProduct",
+        "http://localhost:5000/api/Product/GetProduct",
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token.accessToken}`,
           },
         }
       );
@@ -174,7 +147,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
       if (response.ok) {
         const result = await response.json();
 
-        setAllProduct(result.data.reverse());
+        setAllProduct(result.reverse());
       }
     } catch (error) {
       alert(error);
@@ -185,118 +158,53 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     setCurrentIndex(index);
   };
 
-  const addAmount = async (amount: number) => {
-    // Make a copy of the current product object
-    // const updatedProduct = allProduct;
-
-    // Update the productAmount property
-    // updatedProduct[currentIndex || 0].productQuantity += Number(amount);
-
-    // setAllProduct(updatedProduct);
-
-    let BodyData = {
-      productId: allProduct[currentIndex || 0].productId,
-      quantity: amount,
-      transectionType: "add manual",
-    };
-
-    if (isAdjust) {
-      BodyData.transectionType = "adjust";
-    }
-
-    // Make a PUT request to update the product on the server
-    var Token:any = localStorage.getItem("JWT");
-    var objToken = JSON.parse(Token);
-
-    try {
-      const response = await fetch(
-        "http://localhost:81/api/Transection/Addsection",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + objToken.accessToken
-          },
-          body: JSON.stringify(BodyData),
-        }
-      );
-
-      if (response.ok) {
-        await response.json;
-      }
-    } catch (error) {
-      alert(error);
-    } finally {
-      setIsAdjust(false);
-    }
-  };
-
-  const reduceAmount = async (amount: number) => {
-    // Make a copy of the current product object
-    // const updatedProduct = allProduct;
-
-    // Update the productAmount property
-    // updatedProduct[currentIndex || 0].productQuantity -= Number(amount);
-
-    // setAllProduct(updatedProduct);
-    let BodyData = {
-      productId: allProduct[currentIndex || 0].productId,
-      quantity: amount,
-      transectionType: "reduce manual",
-    };
-
-    if (isAdjust) {
-      BodyData.transectionType = "adjust";
-    }
-
-    // Make a PUT request to update the product on the server
-    try {
-      const response = await fetch(
-        "http://localhost:81/api/Transection/Addsection",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(BodyData),
-        }
-      );
-
-      if (response.ok) {
-        await response.json;
-      }
-    } catch (error) {
-    } finally {
-      setIsAdjust(false);
-    }
-  };
-
   const handleIsAdjust = () => {
     setIsAdjust(!isAdjust);
   };
 
-  const addNewProduct = async (newProduct: newProductInterface) => {
-    // change newProduct type to newProductInterface
-    // delete after connected to server
-    // const newP: ProductInterface = {
-    //   productId: (allProduct.length - 1).toString(),
-    //   productName: newProduct.productName,
-    //   productDescription: newProduct.productDescription,
-    //   productQuantity: newProduct.productQuantity,
-    //   mfd: newProduct.mfd,
-    //   exd: newProduct.exd,
-    //   productAddDate: "today",
-    // };
-    // setAllProduct([...allProduct, newP]);
+  const updateQuantity = async (updateData: editQuantity) => {
+    // Make a POST request to update the product on the server
+    if (isAdjust) {
+      updateData.transectionType += "-adjust";
+    }
+    console.log(updateData);
+    setIsSubmit(true);
+    let token: any = JSON.parse(localStorage.getItem("JWT") || "");
 
-    // fetch newProduct to server
     try {
       const response = await fetch(
-        "http://localhost:81/api/Transection/Addsection",
+        "http://localhost:5000/api/Transection/AddTransection",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      if (response.ok) {
+        await response.json;
+      }
+    } catch (error) {
+    } finally {
+      isAdjust && setIsAdjust(false);
+      setIsSubmit(false);
+    }
+  };
+
+  const addNewProduct = async (newProduct: newProductInterface) => {
+    let token: any = JSON.parse(localStorage.getItem("JWT") || "");
+    // fetch newProduct to server
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/Product/AddProduct",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.accessToken}`,
           },
           body: JSON.stringify(newProduct),
         }
@@ -311,8 +219,18 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
   };
 
   useEffect(() => {
-    checkIfIsLogin();
-  }, []);
+    const init = async () => {
+      await checkIfIsLogin();
+    };
+    init();
+  }, [currentUser]);
+
+  useEffect(() => {
+    const init = async () => {
+      await getAllProduct();
+    };
+    init();
+  }, [isSubmit]);
 
   return (
     <ActionContext.Provider
@@ -320,16 +238,19 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
         isLogin,
         handleRegister,
         currentUser,
+
         handleLogin,
         handleLogout,
+        checkIfIsLogin,
+
         allProduct,
         getAllProduct,
         addNewProduct,
+
         currentIndex,
         handleCurrentIndex,
-        addAmount,
-        reduceAmount,
         handleIsAdjust,
+        updateQuantity,
         isAdjust,
       }}
     >

@@ -4,17 +4,13 @@ import ProductCard from "./ProductCard";
 import AdjustModal from "./AdjustModal";
 
 const RenderStock: FC = () => {
-  const { allProduct, handleCurrentIndex } = useContext(ActionContext);
-  const [closeModal, setCloseModal] = useState<boolean>(true);
+  const { allProduct, handleCurrentIndex, getAllProduct } =
+    useContext(ActionContext);
 
   const openModalHandler = (index: number): void => {
     let element = document.getElementById("adjust-modal") as HTMLInputElement;
     element.checked = true;
     handleCurrentIndex(index);
-  };
-
-  const closeModalHandler = (): void => {
-    setCloseModal(!closeModal);
   };
 
   return (
@@ -36,7 +32,7 @@ const RenderStock: FC = () => {
           )}
         </div>
       </div>
-      <AdjustModal onClose={closeModalHandler} />
+      <AdjustModal />
     </>
   );
 };
