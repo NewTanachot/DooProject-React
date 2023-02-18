@@ -5,7 +5,7 @@ import { ActionContext } from "../../context/action";
 const Navbar = () => {
   const { isLogin, currentUser, handleLogout } = useContext(ActionContext);
   return (
-    <div className="navbar bg-base-100 fw-full flex justify-between items-center bg-white sm:px-8  px-4 py-4 border-b border-b-[#e6ebf4]">
+    <div className="navbar bg-base-100 w-full flex justify-between items-center bg-white sm:px-8  px-4 py-4 border-b border-b-[#e6ebf4]">
       <div>
         <Link to="/" className="text-xl">
           Logo
@@ -16,11 +16,11 @@ const Navbar = () => {
         <>
           <menu>
             <div>
-              <ul className="menu menu-horizontal">
-                <li className="px-4">
+              <ul className="menu menu-horizontal ">
+                <li className="px-4 text-lg">
                   <Link to="/">สินค้า</Link>
                 </li>
-                <li className="px-4">
+                <li className="px-4 text-lg">
                   <Link to="/log">รายการ</Link>
                 </li>
               </ul>

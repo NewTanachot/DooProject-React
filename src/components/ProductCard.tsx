@@ -12,16 +12,18 @@ const ProductCard: FC<Props> = (props) => {
 
   return (
     <div
-      className="card card-compact h-32 bg-base-100 shadow-xl border-2 border-black"
+      className="card card-compact bg-base-100 shadow-xl border-2 border-black px-2"
       onClick={() => onClickModal(productIndex)}
     >
-      {/* <figure>
+      {/* causing web page */}
+      <figure>
         <img
-          src=""
-          alt=""
+          src="/src/assets/preview.png"
+          alt="product-preview"
+          className="w-48 h-48"
         />
-      </figure> */}
-      <div className="card-body m-4 ">
+      </figure>
+      <div className="card-body ">
         <h2 className="font-bold text-2xl text-center">
           {/* Need to link break if produce's name are too long*/}
           {allProduct[productIndex].productName}

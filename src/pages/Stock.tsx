@@ -12,7 +12,7 @@ const Stock = () => {
           <section>
             <div className="flex justify-center items-center">
               <h2 className="font-bold text-4xl">สินค้าที่มีอยู่</h2>
-              <label htmlFor="newProduct-modal" className="btn my-4 mx-8 px-8">
+              <label htmlFor="newProduct-modal" className="btn my-4 ml-4 px-8">
                 เพิ่มใหม่
               </label>
             </div>

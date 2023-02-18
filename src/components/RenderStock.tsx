@@ -4,8 +4,7 @@ import ProductCard from "./ProductCard";
 import AdjustModal from "./AdjustModal";
 
 const RenderStock: FC = () => {
-  const { allProduct, handleCurrentIndex, getAllProduct } =
-    useContext(ActionContext);
+  const { allProduct, handleCurrentIndex } = useContext(ActionContext);
 
   const openModalHandler = (index: number): void => {
     let element = document.getElementById("adjust-modal") as HTMLInputElement;

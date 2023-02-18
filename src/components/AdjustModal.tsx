@@ -60,10 +60,28 @@ const AdjustModal: FC = () => {
       <input type="checkbox" id="adjust-modal" className="modal-toggle" />
       <div className="modal" id="adjust-modal">
         <div className="modal-box">
-          <h3 className="font-bold text-2xl">
-            {allProduct[0] && allProduct[currentIndex].productName}
-          </h3>
-          <div className="flex justify-between items-center mt-4">
+          <section className="flex justify-between items-center">
+            <div className="flex hover:cursor-pointer">
+              <h3 className="font-bold text-2xl mx-2">
+                {allProduct[0] && allProduct[currentIndex].productName}
+              </h3>
+              <img
+                src="/src/assets/icon_edit.svg"
+                alt="edit-icon"
+                className="w-6"
+              />
+            </div>
+
+            <figure>
+              <img
+                src="/src/assets/icon_bin.svg"
+                alt="bin-icon"
+                className="w-8"
+              />
+            </figure>
+          </section>
+
+          <div className="flex justify-between items-center mt-6">
             <section>
               <button
                 className={`btn border-0 px-10 mx-4 `}
