@@ -167,7 +167,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     if (isAdjust) {
       updateData.transectionType += "-adjust";
     }
-    console.log(updateData);
+
     setIsSubmit(true);
     let token: any = JSON.parse(localStorage.getItem("JWT") || "");
 
@@ -197,6 +197,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
   const addNewProduct = async (newProduct: newProductInterface) => {
     let token: any = JSON.parse(localStorage.getItem("JWT") || "");
     // fetch newProduct to server
+    setIsSubmit(true);
     try {
       const response = await fetch(
         "http://localhost:5000/api/Product/AddProduct",
@@ -215,6 +216,8 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
       }
     } catch (error) {
       alert(error);
+    } finally {
+      setIsSubmit(false);
     }
   };
 

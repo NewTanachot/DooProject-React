@@ -37,9 +37,9 @@ const NewProductModal = () => {
     const data: newProductInterface = {
       productName: productName,
       productQuantity: productQuantity,
-      productDescription: productDescription,
-      mfd: mfd,
-      exd: exd,
+      productDescription: productDescription ? productDescription : null,
+      mfd: mfd ? new Date(mfd) : null,
+      exd: exd ? new Date(exd) : null,
     };
     addNewProduct(data);
     closeModalHandler();

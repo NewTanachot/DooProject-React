@@ -36,9 +36,9 @@ export interface ProductInterface {
 export interface newProductInterface {
   productName: string;
   productQuantity: number;
-  productDescription: string;
-  mfd: string;
-  exd: string;
+  productDescription: string | null;
+  mfd: Date | null;
+  exd: Date | null;
 }
 
 export interface newUser {
