@@ -81,6 +81,7 @@ const AdjustModal: FC = () => {
             </figure>
           </section>
 
+          {/* Adjust section */}
           <div className="flex justify-between items-center mt-6">
             <section>
               <button
