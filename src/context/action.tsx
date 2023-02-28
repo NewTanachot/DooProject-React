@@ -64,7 +64,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
   const handleRegister = async (user: newUser) => {
     try {
       // fetch to server
-      const response = await fetch("http://localhost:5000/api/Auth/Register", {
+      const response = await fetch("http://localhost:81/api/Auth/Register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +88,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/Auth/Login", {
+      const response = await fetch("http://localhost:81/api/Auth/Login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -134,7 +134,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     try {
       // return;
       const response = await fetch(
-        "http://localhost:5000/api/Product/GetProduct",
+        "http://localhost:81/api/Product/GetProduct",
         {
           method: "GET",
           headers: {
@@ -173,7 +173,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/Transection/AddTransection",
+        "http://localhost:81/api/Transection/AddTransection",
         {
           method: "POST",
           headers: {
@@ -200,7 +200,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     setIsSubmit(true);
     try {
       const response = await fetch(
-        "http://localhost:5000/api/Product/AddProduct",
+        "http://localhost:81/api/Product/AddProduct",
         {
           method: "POST",
           headers: {
