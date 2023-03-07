@@ -9,23 +9,34 @@ import {
   newUser,
   ProductInterface,
   editQuantity,
+  editProductInterface,
 } from "../types/context/Action.context";
 
 const defaultValue: ActionContextInterface = {
   isLogin: false,
   handleRegister: async (user: newUser) => {},
   currentUser: "",
+
   handleLogin: async (email: string, password: string) => {},
   handleLogout: () => {},
   checkIfIsLogin: () => {},
+
   allProduct: [],
   getAllProduct: async () => {},
   addNewProduct: async (newProduct: newProductInterface) => {},
+
   currentIndex: 0,
   handleCurrentIndex: (index: number) => {},
-  handleIsAdjust: () => {},
+
+  toggleIsAdjust: () => {},
   updateQuantity: async (updateData: editQuantity) => {},
   isAdjust: false,
+
+  toggleIsEdit: () => {},
+  isEdit: false,
+  editProduct: async (editedProduct: editProductInterface) => {},
+
+  removeProduct: async () => {},
 };
 
 export const ActionContext =
@@ -42,6 +53,11 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isAdjust, setIsAdjust] = useState<boolean>(false);
+
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  // Access Token
+  let token: any = JSON.parse(localStorage.getItem("JWT") || "");
 
   // navigation
   // const navigate = useNavigate();
@@ -158,7 +174,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     setCurrentIndex(index);
   };
 
-  const handleIsAdjust = () => {
+  const toggleIsAdjust = () => {
     setIsAdjust(!isAdjust);
   };
 
@@ -221,6 +237,61 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
     }
   };
 
+  const toggleIsEdit = () => {
+    setIsEdit(!isEdit);
+  };
+
+  const editProduct = async (editedProduct: editProductInterface) => {
+    // fetch editProduct to server
+    setIsSubmit(true);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/Product/EditProduct",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+          body: JSON.stringify(editedProduct),
+        }
+      );
+
+      if (response.ok) {
+        await response.json;
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      setIsSubmit(false);
+    }
+  };
+
+  const removeProduct = async () => {
+    // fetch editProduct to server
+    setIsSubmit(true);
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/Product/RemoveProduct/${allProduct[currentIndex].productId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        await response.json;
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      setIsSubmit(false);
+    }
+  };
+
   useEffect(() => {
     const init = async () => {
       await checkIfIsLogin();
@@ -252,9 +323,15 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
 
         currentIndex,
         handleCurrentIndex,
-        handleIsAdjust,
+        toggleIsAdjust,
         updateQuantity,
         isAdjust,
+
+        toggleIsEdit,
+        isEdit,
+        editProduct,
+
+        removeProduct,
       }}
     >
       {children}

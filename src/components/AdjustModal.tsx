@@ -1,16 +1,30 @@
 import React, { useState, useContext, FC, useEffect } from "react";
 import { ActionContext } from "../context/action";
 import { editQuantity } from "../types/context/Action.context";
+import EditProductSection from "./EditProductSection";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const updateTypes = ["add", "reduce"];
 
 const AdjustModal: FC = () => {
-  const { currentIndex, allProduct, isAdjust, handleIsAdjust, updateQuantity } =
-    useContext(ActionContext);
+  const {
+    currentIndex,
+    allProduct,
+    isAdjust,
+    toggleIsAdjust,
+    updateQuantity,
+    toggleIsEdit,
+    isEdit,
+  } = useContext(ActionContext);
   const [amount, setAmount] = useState<number>(0);
   const [updateType, setUpdateType] = useState<string>("add");
 
   const [formValid, setFormValid] = useState<boolean>(false);
+
+  const openConfirmModal = (): void => {
+    let element = document.getElementById("confirm-modal") as HTMLInputElement;
+    element.checked = true;
+  };
 
   const inputAmount = (event: any): void => {
     if (updateType === "add") {
@@ -61,7 +75,10 @@ const AdjustModal: FC = () => {
       <div className="modal" id="adjust-modal">
         <div className="modal-box">
           <section className="flex justify-between items-center">
-            <div className="flex hover:cursor-pointer">
+            <figure
+              className="flex hover:cursor-pointer"
+              onClick={toggleIsEdit}
+            >
               <h3 className="font-bold text-2xl mx-2">
                 {allProduct[0] && allProduct[currentIndex].productName}
               </h3>
@@ -70,9 +87,12 @@ const AdjustModal: FC = () => {
                 alt="edit-icon"
                 className="w-6"
               />
-            </div>
+            </figure>
 
-            <figure>
+            <figure
+              className="flex hover:cursor-pointer"
+              onClick={openConfirmModal}
+            >
               <img
                 src="/src/assets/icon_bin.svg"
                 alt="bin-icon"
@@ -81,71 +101,78 @@ const AdjustModal: FC = () => {
             </figure>
           </section>
 
-          {/* Adjust section */}
-          <div className="flex justify-between items-center mt-6">
-            <section>
-              <button
-                className={`btn border-0 px-10 mx-4 `}
-                onClick={() => {
-                  setUpdateType(updateTypes[0]);
-                }}
-                disabled={updateType === "add"}
-              >
-                เพิ่ม
-              </button>
-              <button
-                className={`btn border-0 px-10 mx-4 `}
-                onClick={() => {
-                  setUpdateType(updateTypes[1]);
-                }}
-                disabled={updateType === "reduce"}
-              >
-                ลด
-              </button>
-            </section>
-            <label className="font-bold">
-              <input
-                type="checkbox"
-                checked={isAdjust}
-                onChange={handleIsAdjust}
-              />
-              แก้ไข
-            </label>
-          </div>
+          <ConfirmDeleteModal />
 
-          <form className="flex flex-col justify-start items-center border-t-2 mt-8 p-4">
-            <label className="font-bold text-2xl text-center">
-              Enter {updateType} value
-            </label>
-            <input
-              placeholder="0"
-              name="amount"
-              type="number"
-              step={1}
-              onChange={inputAmount}
-              value={amount}
-              className="input input-bordered w-full my-4"
-            />
+          {isEdit ? (
+            <EditProductSection />
+          ) : (
+            <>
+              <div className="flex justify-between items-center mt-6">
+                <section>
+                  <button
+                    className={`btn border-0 px-10 mx-4 `}
+                    onClick={() => {
+                      setUpdateType(updateTypes[0]);
+                    }}
+                    disabled={updateType === "add"}
+                  >
+                    เพิ่ม
+                  </button>
+                  <button
+                    className={`btn border-0 px-10 mx-4 `}
+                    onClick={() => {
+                      setUpdateType(updateTypes[1]);
+                    }}
+                    disabled={updateType === "reduce"}
+                  >
+                    ลด
+                  </button>
+                </section>
+                <label className="font-bold">
+                  <input
+                    type="checkbox"
+                    checked={isAdjust}
+                    onChange={toggleIsAdjust}
+                  />
+                  แก้ไข
+                </label>
+              </div>
 
-            <div className="flex flex-row mt-10 justify-between items-center">
-              <button
-                type="button"
-                className="btn btn-primary mx-8"
-                onClick={closeModalHandler}
-              >
-                cancel
-              </button>
+              <form className="flex flex-col justify-start items-center border-t-2 mt-8 p-4">
+                <label className="font-bold text-2xl text-center">
+                  Enter {updateType} value
+                </label>
+                <input
+                  placeholder="0"
+                  name="amount"
+                  type="number"
+                  step={1}
+                  onChange={inputAmount}
+                  value={amount}
+                  className="input input-bordered w-full my-4"
+                />
 
-              <button
-                type="button"
-                className="btn btn-primary mx-8"
-                onClick={handleSubmit}
-                disabled={!formValid}
-              >
-                Submit
-              </button>
-            </div>
-          </form>
+                <div className="flex flex-row mt-10 justify-between items-center">
+                  <button
+                    type="button"
+                    className="btn btn-primary mx-8"
+                    onClick={closeModalHandler}
+                  >
+                    cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-primary mx-8"
+                    onClick={handleSubmit}
+                    disabled={!formValid}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </div>
       </div>
     </>

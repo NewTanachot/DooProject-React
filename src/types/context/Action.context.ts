@@ -14,9 +14,15 @@ export interface ActionContextInterface {
   currentIndex: number;
   handleCurrentIndex: (index: number) => void;
 
-  handleIsAdjust: () => void;
+  toggleIsAdjust: () => void;
   updateQuantity: (updateData: editQuantity) => {};
   isAdjust: boolean;
+
+  toggleIsEdit: () => void;
+  isEdit: boolean;
+  editProduct: (editedProduct: editProductInterface) => {};
+
+  removeProduct: () => {};
 }
 
 export interface ActionProviderInterface {
@@ -26,10 +32,10 @@ export interface ActionProviderInterface {
 export interface ProductInterface {
   productId: string;
   productName: string;
-  productDescription: string;
+  productDescription: string | null;
   productQuantity: number;
-  mfd: string;
-  exd: string;
+  mfd: string | null;
+  exd: string | null;
   productAddDate: string;
 }
 
@@ -52,4 +58,12 @@ export interface editQuantity {
   productId: string;
   quantity: number;
   transectionType: string;
+}
+
+export interface editProductInterface {
+  productId: string;
+  productName: string;
+  productDescription: string | null;
+  mfd: Date | null;
+  exd: Date | null;
 }
