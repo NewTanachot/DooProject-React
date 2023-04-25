@@ -1,15 +1,16 @@
-import { FC } from "react";
-import { Outlet } from "react-router-dom";
+import React, { FC } from "react";
 import Navbar from "./Navbar";
 
-const Layout: FC = () => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const Layout: FC<Props> = ({ children }) => {
   return (
-    <>
-      <div className="h-screen w-screen">
-        <Navbar />
-        <Outlet />
-      </div>
-    </>
+    <div className="flex flex-col h-screen">
+      <Navbar />
+      <div className="flex-grow">{children}</div>
+    </div>
   );
 };
 

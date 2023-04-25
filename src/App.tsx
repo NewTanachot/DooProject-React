@@ -1,23 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Stock, HistoryLog, Register } from "./pages";
-import { Fragment } from "react";
+import { Login } from "./components";
+import { ActionContext } from "../src/context/action";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./components/shared/Layout";
 
 const App: React.FC = () => {
+  const { isLogin } = useContext(ActionContext);
   return (
-    <Fragment>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
+    <BrowserRouter>
+      <Layout>
+        {!isLogin && <Login />}
+        {isLogin && (
+          <Routes>
             <Route path="/" element={<Stock />} />
             <Route path="/register" element={<Register />} />
             <Route path="/log" element={<HistoryLog />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </Fragment>
+          </Routes>
+        )}
+      </Layout>
+    </BrowserRouter>
   );
 };
 

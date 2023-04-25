@@ -56,9 +56,6 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  // Access Token
-  let token: any = JSON.parse(localStorage.getItem("JWT") || "");
-
   // navigation
   // const navigate = useNavigate();
 
@@ -242,6 +239,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
   };
 
   const editProduct = async (editedProduct: editProductInterface) => {
+    let token: any = JSON.parse(localStorage.getItem("JWT") || "");
     // fetch editProduct to server
     setIsSubmit(true);
     try {
@@ -268,6 +266,7 @@ export const ActionProvider = ({ children }: ActionProviderInterface) => {
   };
 
   const removeProduct = async () => {
+    let token: any = JSON.parse(localStorage.getItem("JWT") || "");
     // fetch editProduct to server
     setIsSubmit(true);
     try {

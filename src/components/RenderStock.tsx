@@ -4,7 +4,8 @@ import ProductCard from "./ProductCard";
 import AdjustModal from "./AdjustModal";
 
 const RenderStock: FC = () => {
-  const { allProduct, handleCurrentIndex } = useContext(ActionContext);
+  const { allProduct, handleCurrentIndex, getAllProduct } =
+    useContext(ActionContext);
 
   const openModalHandler = (index: number): void => {
     let element = document.getElementById("adjust-modal") as HTMLInputElement;
@@ -12,10 +13,14 @@ const RenderStock: FC = () => {
     handleCurrentIndex(index);
   };
 
+  useEffect(() => {
+    getAllProduct();
+  }, []);
+
   return (
     <>
-      <div className="grid justify-evenly items-center mt-8">
-        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10">
+      <div className="flex justify-center items-center">
+        <div className="max-w-screen-lg mx-auto">
           {allProduct.length > 0 ? (
             allProduct.map((pdt, index) => {
               return (

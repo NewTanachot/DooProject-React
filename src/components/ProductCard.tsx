@@ -6,31 +6,30 @@ interface Props {
   productIndex: number;
 }
 
-const ProductCard: FC<Props> = (props) => {
-  const { onClickModal, productIndex } = props;
+const ProductCard: FC<Props> = ({ onClickModal, productIndex }) => {
   const { allProduct } = useContext(ActionContext);
+  const item = allProduct[productIndex];
 
   return (
     <div
-      className="card card-compact bg-base-100 shadow-xl border-2 border-black px-2"
       onClick={() => onClickModal(productIndex)}
+      className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl overflow-hidden"
     >
-      {/* causing web page */}
-      <figure>
-        <img
-          src="/src/assets/preview.png"
-          alt="product-preview"
-          className="w-48 h-48"
-        />
-      </figure>
-      <div className="card-body ">
-        <h2 className="font-bold text-2xl text-center">
-          {/* Need to link break if produce's name are too long*/}
-          {allProduct[productIndex].productName}
-        </h2>
-        <h2 className="font-semibold text-lg text-end mt-4">
-          {allProduct[productIndex].productQuantity}
-        </h2>
+      <div className="md:flex">
+        <div className="md:flex-shrink-0">
+          <img
+            className="h-32 w-32 object-cover"
+            src="/src/assets/preview.png"
+            alt={item.productName}
+          />
+        </div>
+        <div className="p-8">
+          <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+            {item.productName}
+          </div>
+          <p className="mt-2 text-gray-500">{item.productDescription}</p>
+          <p className="mt-2 text-gray-500">Quantity: {item.productQuantity}</p>
+        </div>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { ActionContext } from "../../context/action";
 const Navbar = () => {
   const { isLogin, currentUser, handleLogout } = useContext(ActionContext);
   return (
-    <div className="navbar bg-base-100 w-full flex justify-between items-center bg-white sm:px-8  px-4 py-4 border-b border-b-[#e6ebf4]">
+    <div className="navbar w-screen flex justify-between items-center bg-white sm:px-8 py-4 border-b border-b-[#e6ebf4]">
       <div>
         <Link to="/" className="text-xl">
           Logo
